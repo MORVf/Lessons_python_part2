@@ -1,33 +1,67 @@
 '''
+Реализуйте программу, которая будет эмулировать работу с пространствами имен. Необходимо реализовать поддержку создания 
+пространств имен и добавление в них переменных.
+В данной задаче у каждого пространства имен есть уникальный текстовый идентификатор – его имя.
+Вашей программе на вход подаются следующие запросы:
+- create <namespace> <parent> –  создать новое пространство имен с именем <namespace> внутри пространства <parent>
+- add <namespace> <var> – добавить в пространство <namespace> переменную <var>
+- get <namespace> <var> – получить имя пространства, из которого будет взята переменная <var> при запросе из 
+пространства <namespace>, или None, если такого пространства не существует
+
+Формат входных данных:
+В первой строке дано число n (1 ≤ n ≤ 100) – число запросов.
+В каждой из следующих n строк дано по одному запросу.
+Запросы выполняются в порядке, в котором они даны во входных данных.
+Имена пространства имен и имена переменных представляют из себя строки длины не более 10, состоящие из строчных латинских букв.
+Формат выходных данных:
+Для каждого запроса get выведите в отдельной строке его результат.
+
+Sample Input:
+9
+add global a
+create foo global
+add foo b
+get foo a
+get foo c
+create bar foo
+add bar a
+get bar a
+get bar b
+
+Sample Output:
+global
+None
+bar
+foo
 '''
 
-n = int(input())
+n = int(input()) #считываем количество строк
 
-namespaces = {'global': []}
+namespaces = {'global': []} #инициализируем словарь с пространством global
 
-def create(namespace, parent):
-    namespaces[parent] += [namespace]
-    namespaces[namespace] = []
+def create(namespace, parent): #функция добавления нового пространства внутри существующего
+    namespaces[parent] += [namespace] #добавление пространства в родителя
+    namespaces[namespace] = [] #создание нового пространства
 
-def add(namespace, var):
+def add(namespace, var): #функция добавления новой переменной в пространство
     namespaces[namespace] += [var]
 
-def get(namespace, var):
-    if var in namespaces[namespace]:
-        return print(namespace)
-    elif namespace != 'global':
-        for key in namespaces.keys():
-            for value in namespaces[key]:
-                if value == namespace:
-                    get(key, var)
-    else:
-        return print('None')
+def get(namespace, var): #функция по возврату имени ближайшего пространства, в котором находится указанная переменная
+    if var in namespaces[namespace]: #если переменная нашлась, то
+        return print(namespace)  #выводим имя пространства
+    elif namespace != 'global':   #если переменная не нашлась и пространство != global
+        for key in namespaces.keys():  #ищем пространство-родителя для текущего пространства
+            for value in namespaces[key]:   #пробегая все значения по ключам словаря
+                if value == namespace:   #если нашли родителя, то
+                    get(key, var)   #вызываем рекурсивную функцию
+    else:   #если переменная не нашлась и пространство == global
+        return print('None')   #выводим None
 
-for i in range(n):
-    command = input().split()
-    if command[0] == 'create':
-        create(command[1], command[2])
-    elif command[0] == 'add':
-        add(command[1], command[2])
-    else:
-        get(command[1], command[2])
+for i in range(n):   #считываем указанное количество строк
+    command = input().split()   #читаем каждую строку, разделённую пробелами, и записываем подстроки в список
+    if command[0] == 'create':   #если первым элементом списка идет строка create, то
+        create(command[1], command[2])  #вызываем соответствующую функцию
+    elif command[0] == 'add':   #если add
+        add(command[1], command[2])   #то функцию add
+    else:   #иначе
+        get(command[1], command[2])   #функцию get
