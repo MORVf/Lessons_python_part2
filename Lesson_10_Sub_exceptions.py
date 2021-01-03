@@ -60,7 +60,7 @@ def is_useless_exception(error):  # функция проверки нужнос
                 if temp_lst_exceptions.index(parent) < temp_lst_exceptions.index(is_root_exception):  # если индекс предка меньше индекса исключения
                     if is_root_exception not in lst_with_fail_exceptions:  # если исключение ещё не помечено как ненужное
                         lst_with_fail_exceptions += [is_root_exception]  # то добавляем его в список ненужных
-                        return print(is_root_exception)  # выводим исключение
+                        print(is_root_exception)  # выводим исключение
             else:  # иначе
                 is_useless_exception(parent)  # вызываем рекурсивно функцию проверки нужности исключения по саб-классу
 
