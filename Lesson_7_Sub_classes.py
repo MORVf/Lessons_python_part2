@@ -46,9 +46,10 @@ Yes
 Yes
 No
 
+Используемые функции: is_parent, add_subclass_in_parent.
+
 """
 
-__all__ = ['is_parent', 'add_subclass_in_parent', 'dict_classes']
 __version__ = '1.0.0'
 __author__ = 'Evgenii Mayorov'
 
@@ -56,56 +57,66 @@ dict_classes = {}
 
 
 def is_parent(parent, heir):
-    """Функция, определяющая наличие связи предок-наследник у классов."""
+    """Функция, определяющая наличие связи предок-наследник у классов.
+    
+    Аргументы:
+    parent - вероятный предок
+    heir - вероятный наследник
+    
+    Возвращает либо Yes, либо No.
+    """
     global is_heir
-    global is_end_cycle   #глобальная переменная, говорящая завершился ли поиск наследника по всем подклассам класса-предка
-    global is_root_parent   #глобальная переменная, хранящая в себе начального предка, у которого ищется наследник
-    if heir in dict_classes[parent]:   #если наследник есть в первичных подклассах родителя
-        is_heir = True   #наследник найден
+    global is_end_cycle
+    global is_root_parent
+    if heir in dict_classes[parent]:  # если наследник есть в первичных подклассах родителя
+        is_heir = True  # наследник найден
         return print('Yes')
-    elif len(dict_classes[parent]) > 0:   #иначе, если есть иные подклассы у родителя, то ищем наследника в них
-        is_end_cycle = False    #начинаем цикл сначала
-        for value in dict_classes[parent]:    #пробегаем по одному каждый подкласс
-            if is_heir is False:    #если до этого момента Наследник не найден, то
-                is_parent(value, heir)    #вызываем рекурсивно поиск наследника в подклассах подкласса предка
-        if parent == is_root_parent and is_heir is False:    #если во всех подклассах подклассов предка не нашлось наследника, то
+    elif len(dict_classes[parent]) > 0:  # если есть иные подклассы у родителя, то ищем наследника в них
+        is_end_cycle = False  # начинаем цикл сначала
+        for value in dict_classes[parent]:  # пробегаем по одному каждый подкласс
+            if not is_heir:  # если до этого момента Наследник не найден, то
+                is_parent(value, heir)  # вызываем рекурсивно поиск наследника в подклассах подкласса предка
+        if parent == is_root_parent and is_heir is False:  # если во всех подклассах подклассов предка не нашлось наследника
             return print('No')
-    elif is_end_cycle is True:   #если подклассов нет и наследник не найден, то
+    elif is_end_cycle is True:  # если подклассов нет и наследник не найден
         return print('No')
 
 
 def add_subclass_in_parent():
-    """Функция добавления классов и наследований."""
-    for ind_cls in range(2, len(lst_cls)):    #пробегаем все элементы входящего списка после ":"
-        if lst_cls[ind_cls] not in dict_classes:    #если такой строки-ключа нет в словаре, то
-            dict_classes[lst_cls[ind_cls]] = []    #добавляем его в словарь
+    """Функция добавления классов и наследований.
+    
+    Аргументы отсутствуют, возвращает None.
+    
+    """
+    for ind_cls in range(2, len(lst_cls)):  # пробегаем все элементы входящего списка после ":"
+        if lst_cls[ind_cls] not in dict_classes:
+            dict_classes[lst_cls[ind_cls]] = []
         for key in dict_classes.keys():
-            if key == lst_cls[ind_cls]:     #при совпадении ключа-родителя с элементом списка
-                dict_classes[key] += [lst_cls[0]]    #добавляем к родителю нового наследника 
+            if key == lst_cls[ind_cls]:
+                dict_classes[key] += [lst_cls[0]] 
 
-
-if __name__ == "__main__":
     
-    n = int(input())
+n = int(input())
     
-    for i in range(n):
-        lst_cls = input().split()   #считываем строки-списки
-        if lst_cls[0] not in dict_classes:    #если в списке есть первый элемент, которого нет в словаре,
-            dict_classes[lst_cls[0]] = []     # то добавляем его в словарь
+for i in range(n):
+    lst_cls = input().split()
+    if lst_cls[0] not in dict_classes:
+        dict_classes[lst_cls[0]] = []
 
-        if ':' in lst_cls:   # если в списке есть символ ":", то
-            add_subclass_in_parent()   #вызываем функцию добавления классов и наследований
+    if ':' in lst_cls:
+        add_subclass_in_parent()
 
-    q = int(input())
+q = int(input())
 
-    for j in range(q):
-        lst_with_classes = input().split()   #считываем строки-списки для проверки связи наследования
-        if lst_with_classes[0] == lst_with_classes[1]:    #если предок == наследнику, то
-            print('Yes')
-        elif lst_with_classes[0] in dict_classes and lst_with_classes[1] in dict_classes:   #если предок != наследнику, но они оба есть в словаре, то
-            is_heir = False   #выставляем "наследник не найден"
-            is_end_cycle = True   #выставляем "поиск наследника завершился по всем подклассам класса-предка"
-            is_root_parent = lst_with_classes[0]   #сохраняем начального предка, у которого ищется наследник
-            is_parent(lst_with_classes[0], lst_with_classes[1])   #вызываем функцию определения наследственности
-        else:   #если предок != наследнику и при этом кого-то из них нет в ключах словаря, то
-            print('No')
+for j in range(q):
+    lst_with_classes = input().split()
+    if lst_with_classes[0] == lst_with_classes[1]:  # если предок == наследнику
+        print('Yes')
+    # если предок != наследнику, но они оба есть в словаре
+    elif lst_with_classes[0] in dict_classes and lst_with_classes[1] in dict_classes:
+        is_heir = False  # выставляем "наследник не найден"
+        is_end_cycle = True  # выставляем "поиск наследника завершился по всем подклассам класса-предка"
+        is_root_parent = lst_with_classes[0]  # сохраняем начального предка, у которого ищется наследник
+        is_parent(lst_with_classes[0], lst_with_classes[1])
+    else:
+        print('No')
