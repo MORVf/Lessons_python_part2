@@ -29,7 +29,7 @@ def primes():
                 break
             i -= 1
 
-        if is_simple is True:
+        if is_simple:
             yield x
         x += 1
 
