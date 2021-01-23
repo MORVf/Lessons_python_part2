@@ -48,9 +48,6 @@ FileNotFoundError
 
 """
 
-__all__ = ['is_useless_exception', 'add_subclass_in_parent', 'dict_classes', 
-           'temp_lst_exceptions', 'lst_with_fail_exceptions',
-           ]
 __version__ = '1.0.0'
 __author__ = 'Evgenii Mayorov'
 
@@ -95,30 +92,28 @@ def add_subclass_in_parent():
             if key == lst_cls[ind_cls]:  # при совпадении ключа-родителя с элементом списка
                 dict_classes[key] += [lst_cls[0]]  # добавляем к родителю нового наследника
 
-
-if __name__ == "__main__":
-    
-    n = int(input())
+ 
+n = int(input())
       
-    for i in range(n):
-        lst_cls = input().split()
-        if lst_cls[0] not in dict_classes:
-            dict_classes[lst_cls[0]] = []
+for i in range(n):
+    lst_cls = input().split()
+    if lst_cls[0] not in dict_classes:
+        dict_classes[lst_cls[0]] = []
 
-        if ':' in lst_cls:
-            add_subclass_in_parent()
+    if ':' in lst_cls:
+        add_subclass_in_parent()
 
-    m = int(input())
+m = int(input())
 
-    for j in range(m):
-        str_exception = input()
-        if str_exception not in lst_with_fail_exceptions:  # если исключения ещё нет в списке ненужных
-            # если исключения нет в словаре наследований или исключение уже использовалось
-            if str_exception not in dict_classes or str_exception in temp_lst_exceptions:
-                lst_with_fail_exceptions += [str_exception]
-                print(str_exception)
-            else:
-                temp_lst_exceptions += [str_exception]  # добавляем его в список, требующий проверки на нужность
-                if len(temp_lst_exceptions) > 1:
-                    is_root_exception = str_exception  # запоминаем первичное входящее исключение
-                    is_useless_exception(str_exception)  # вызываем функцию проверки
+for j in range(m):
+    str_exception = input()
+    if str_exception not in lst_with_fail_exceptions:  # если исключения ещё нет в списке ненужных
+        # если исключения нет в словаре наследований или исключение уже использовалось
+        if str_exception not in dict_classes or str_exception in temp_lst_exceptions:
+            lst_with_fail_exceptions += [str_exception]
+            print(str_exception)
+        else:
+            temp_lst_exceptions += [str_exception]  # добавляем его в список, требующий проверки на нужность
+            if len(temp_lst_exceptions) > 1:
+                is_root_exception = str_exception  # запоминаем первичное входящее исключение
+                is_useless_exception(str_exception)  # вызываем функцию проверки
