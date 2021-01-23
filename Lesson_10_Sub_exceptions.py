@@ -49,8 +49,8 @@ FileNotFoundError
 """
 
 __all__ = ['is_useless_exception', 'add_subclass_in_parent', 'dict_classes', 
-          'temp_lst_exceptions', 'lst_with_fail_exceptions',
-          ]
+           'temp_lst_exceptions', 'lst_with_fail_exceptions',
+           ]
 __version__ = '1.0.0'
 __author__ = 'Evgenii Mayorov'
 
